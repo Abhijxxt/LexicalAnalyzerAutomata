@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -18,7 +18,8 @@ const nodeDefaults = {
 };
 
 export default function AutomataGraphPage({ word , state}: {word: string | null, state: number}) {
-  const initialNodes: Node[] = [
+  console.log(word)
+  const initialNodes: Node[] = useMemo(() => [
     {
       id: "0",
       position: { x: 100, y: 200 },
@@ -141,7 +142,7 @@ export default function AutomataGraphPage({ word , state}: {word: string | null,
       ...nodeDefaults
 
     },
-  ];
+  ], [word, state]);
 
   const initialEdges: Edge[] = [
     { id: "e1", source: "0", target: "1", label: "E" },
@@ -206,7 +207,19 @@ export default function AutomataGraphPage({ word , state}: {word: string | null,
   useEffect(() => {
     setOriginalColor();
     highlightNode(state.toString(), "#16a34a");
-  },[state])
+    if (word !== null) {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === "2"
+            ? {
+                ...node,
+                data: { label: `Token: ${word}` },
+              }
+            : node
+        )
+      );
+    }
+  },[word,state])
 
   return (
     <div className="flex flex-col items-center gap-4">

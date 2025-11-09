@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import AutomataGraphPage from "../automata/page";
-import Link from "next/link";
 
 export default function LexerPage() {
 
@@ -52,7 +51,7 @@ export default function LexerPage() {
 
     const tokenizeData = async () => {
         const word = splittedData ? splittedData[count] : null;
-        console.log(word);
+        // console.log(word);
         if(!word) {
             alert("No more words to tokenize");
             return;
@@ -65,7 +64,7 @@ export default function LexerPage() {
             body: JSON.stringify({ word }),
         });
         const data = await response.json();
-        console.log("Tokenized data:", data.token, data.type);
+        // console.log("Tokenized data:", data.token, data.type);
         setTokenizedData(data);
         setCount(count + 1);
     } 
@@ -129,7 +128,7 @@ export default function LexerPage() {
             }
         
     }
-    console.log("Current state:", state);
+    // console.log("Current state:", state);
     return (
         <div>
             <div className="w-full bg-gray-100 flex flex-row justify-center items-center shadow-sm mb-4">
@@ -149,7 +148,7 @@ export default function LexerPage() {
                 <div className="p-2 m-5">
                     <h1 className="text-xl font-bold">Splitted Data:</h1>
                     <div className="mt-1 bg-slate-100 rounded-lg p-4 max-h-50 overflow-y-auto text-sm font-mono whitespace-pre-wrap">
-                        {splittedData.map((item, index) => <p key={index} style={count-1 == index ? {color: "red"} : {color: "black"}}>INDEX: {index}; ITEM: {item}</p>)}
+                        {splittedData.map((item, index) => <p key={index} style={count-1 == index ? {color: "red"} : {color: "black"}}>{count-1 == index ? "-> " : ""}INDEX: {index}; ITEM: {item}</p>)}
                     </div>
                 </div>
             )}
@@ -162,7 +161,11 @@ export default function LexerPage() {
                 <p className="bg-blue-500 p-2 rounded-md m-4">Type: {tokenizedData.type}</p>
             </div>
             }
-            <AutomataGraphPage word= {splittedData ? splittedData[count-1] : null} state={state}/>
+            <AutomataGraphPage
+            word={splittedData && count > 0 ? splittedData[count - 1] : null}
+            state={state}
+            />
+
         </div>
     )
 }
